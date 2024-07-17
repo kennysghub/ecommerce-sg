@@ -31,6 +31,7 @@ const Product = ({
         }).format(product.price)}
         {itemInCart}
       </p>
+      <p>{product.description}</p>
       <button onClick={onAddToCart}>Add to Cart</button>
     </article>
   );

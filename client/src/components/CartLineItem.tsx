@@ -10,9 +10,9 @@ type PropsType = {
 };
 
 const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
-  const img: string = new URL(`../images/${item.sku}.jpg`, import.meta.url)
-    .href;
-
+  // const img: string = new URL(`../images/${item.sku}.jpg`, import.meta.url)
+  //   .href;
+  console.log("itemimg: ", item);
   // Not really an expensive function, I wouldn't bring in useMemo to memoize.
   const lineTotal: number = item.qty * item.price;
   const highestQty: number = 20 > item.qty ? 20 : item.qty;
@@ -42,7 +42,7 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
 
   const content = (
     <li className="cart__item">
-      <img src={img} alt={item.name} className="cart__img" />
+      <img src={item.imageURL} alt={item.name} />
       <div aria-label="Item Name">{item.name}</div>
       <div aria-label="Price Per Item">
         {new Intl.NumberFormat("en-US", {

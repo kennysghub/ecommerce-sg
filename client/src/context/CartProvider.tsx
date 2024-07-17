@@ -1,19 +1,24 @@
 import { useReducer, useMemo, createContext, ReactElement } from "react";
+/* ---------------------------- Type Definitions ---------------------------- */
+// Represents individual items.
 export type CartItemType = {
   sku: string;
   name: string;
   price: number;
   qty: number;
+  imageURL: string;
 };
 
+// CartStateType, is an object with a cart property that holds an array of CartItemType.
 type CartStateType = { cart: CartItemType[] };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const initCartState: CartStateType = {
   cart: [],
 };
+/* -------------------------------------------------------------------------- */
 
-// strings, coudl use ENUMS
-// Actions for our cart.
+// ReducerAction is a type. It's an object with string constants for each action type.
 const REDUCER_ACTION_TYPE = {
   ADD: "ADD",
   REMOVE: "REMOVE",
@@ -23,10 +28,15 @@ const REDUCER_ACTION_TYPE = {
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
+// - It defines the structure of the actions. The actions have a type and a payload.
 export type ReducerAction = {
   type: string;
   payload?: CartItemType;
 };
+// reducer is function that takes in the CURRENT state and an action.
+// This reducer function handles -state updates- based on dispatched actions.
+// It uses a switch statement to figure out which action to perform, then returns a new state object.
+//* This reducer function is pure and stateless. It does NOT modify existing state. Instead, it creates and returns and new state object.
 
 const reducer = (
   state: CartStateType,
@@ -38,7 +48,7 @@ const reducer = (
         // Message we'd expect in development before anything went into production
         throw new Error("action.payload missing in ADD action");
       }
-      const { sku, name, price } = action.payload;
+      const { sku, name, price, imageURL } = action.payload;
       const filteredCart: CartItemType[] = state.cart.filter(
         (item) => item.sku !== sku
       );
@@ -46,7 +56,10 @@ const reducer = (
         (item) => item.sku === sku
       );
       const qty: number = itemExists ? itemExists.qty + 1 : 1;
-      return { ...state, cart: [...filteredCart, { sku, name, price, qty }] };
+      return {
+        ...state,
+        cart: [...filteredCart, { sku, name, price, qty, imageURL }],
+      };
     }
     case REDUCER_ACTION_TYPE.REMOVE: {
       if (!action.payload) {
@@ -82,6 +95,10 @@ const reducer = (
     }
     case REDUCER_ACTION_TYPE.SUBMIT: {
       // Emptying the cart, include logic if submitting to server or somewhere
+      //TODO: Submit the cart to backend.
+
+      console.log("Submitting cart...");
+      console.log("Cart State: ", state.cart);
       return { ...state, cart: [] };
     }
     default:
@@ -90,10 +107,17 @@ const reducer = (
 };
 
 const useCartContext = (initCartState: CartStateType) => {
+  // The useReducer hook takes in two arguments:
+  // 1. reducer function
+  // 2. initial state
+  // It returns an array with
+  //  1. Current state
+  //  2. Dispatch function
+  // The dispatch function is used to send actions to the reducer. When you call dispatch(action), React will call the reducer function we created with the current state, and the action we provide to the function call, then it will replace the state with the return value.
   const [state, dispatch] = useReducer(reducer, initCartState);
 
-  // Defining reducer actions
-  // Memoized the reducer action type, so it always has the same referential equality  when we pass it into a component, and that will help us memoize the component in the future without worrying about reducer actions causing a re-render.
+  //TODO: To update the cart on backend database, we can use React's useEffect(). This will auto sync cart w/ db whenever it changes.
+
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
@@ -119,7 +143,13 @@ const useCartContext = (initCartState: CartStateType) => {
   });
 
   // Dispatch won't cause re-renders.
-  return { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart };
+  return {
+    dispatch,
+    REDUCER_ACTIONS,
+    totalItems,
+    totalPrice,
+    cart,
+  };
 };
 
 export type UseCartContextType = ReturnType<typeof useCartContext>;

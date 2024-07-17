@@ -1,22 +1,18 @@
-import useCart from "../hooks/useCart";
 import { useState } from "react";
-import CartLineItem from "./CartLineItem";
-
-const Cart = () => {
-  const [confirm, setConfirm] = useState<boolean>(false);
-
+import useCart from "../hooks/useCart";
+import CartLineItem from "../components/CartLineItem";
+// import { useAuth } from "../context/AuthContext";
+const Checkout = () => {
   const { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart } = useCart();
+  const [confirm, setConfirm] = useState<boolean>(false);
+  // const { user, loading } = useAuth();
 
   const onSubmitOrder = () => {
-    dispatch({ type: REDUCER_ACTIONS.SUBMIT });
     setConfirm(true);
   };
-
-  const pageContent = confirm ? (
-    <h2>Thank you for your order!</h2>
-  ) : (
-    <>
-      <h2 className="offscreen">Cart</h2>
+  return (
+    <div>
+      <h2>Checkout Page</h2>
       <ul className="cart">
         {cart.map((item) => {
           return (
@@ -43,11 +39,8 @@ const Cart = () => {
           Place Order
         </button>
       </div>
-    </>
+    </div>
   );
-  const content = <main className="main main--cart">{pageContent}</main>;
-
-  return content;
 };
 
-export default Cart;
+export default Checkout;

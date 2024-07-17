@@ -1,6 +1,16 @@
 import { db } from "./db";
-import { products } from "./schema";
+import { products, users, carts, cartProduct, orders } from "./schema";
+import { v4 as uuidv4 } from "uuid";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcrypt";
 
+// Use these types instead of InferModel
+type User = typeof users.$inferSelect;
+type NewUser = typeof users.$inferInsert;
+type Cart = typeof carts.$inferSelect;
+type NewCart = typeof carts.$inferInsert;
+type Product = typeof products.$inferSelect;
+type NewProduct = typeof products.$inferInsert;
 const seedData = {
   products: [
     {
@@ -58,19 +68,135 @@ const seedData = {
         "Experience the cleaning power of the BLACK+DECKER® SUMMITSERIES™ select Cordless Stick Vacuum. With the MOST SUCTION OF ANY BLACK+DECKER® CORDLESS STICK VACUUM* the powerful brushless motor helps tackle dirt, dust + debris across multiple surfaces in your home. The easy-to-emtpy 750ml dustbowl allows for simple disposal of dirt + debris. The cordless and portable design makes it easy to clean and manuever. With easy clean ups you can get back to doing what you love. Easy By Design™.",
     },
   ],
+  users: [
+    {
+      name: "Alice Johnson",
+      email: "alice@example.com",
+      password: "password123",
+    },
+    { name: "Bob Smith", email: "bob@example.com", password: "password456" },
+    {
+      name: "Charlie Brown",
+      email: "charlie@example.com",
+      password: "password789",
+    },
+  ],
 };
+
+// async function seedDatabase() {
+//   try {
+//     for (const product of seedData.products) {
+//       await db.insert(products).values({
+//         sku: product.sku,
+//         name: product.name,
+//         price: product.price,
+//         imageURL: product.imageURL,
+//         description: product.description,
+//       });
+//     }
+//     console.log("Database seeded successfully");
+//   } catch (error) {
+//     console.error("Error seeding database:", error);
+//   }
+// }
 
 async function seedDatabase() {
   try {
+    // Seed products
     for (const product of seedData.products) {
       await db.insert(products).values({
+        id: uuidv4(),
         sku: product.sku,
         name: product.name,
         price: product.price,
         imageURL: product.imageURL,
         description: product.description,
-      });
+      } as NewProduct);
     }
+    console.log("Products seeded successfully");
+
+    // Seed users
+    const seededUsers: User[] = [];
+    for (const user of seedData.users) {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      const [seededUser] = await db
+        .insert(users)
+        .values({
+          id: uuidv4(), // This is fine as it matches your server-side user creation
+          name: user.name,
+          email: user.email,
+          password: hashedPassword,
+        } as NewUser)
+        .returning();
+      seededUsers.push(seededUser);
+    }
+    console.log("Users seeded successfully");
+
+    // Seed carts and cart_product
+    for (const user of seededUsers) {
+      const [cart] = await db
+        .insert(carts)
+        .values({
+          id: uuidv4(),
+          userId: user.id,
+        } as NewCart)
+        .returning();
+
+      // Add random products to each cart
+      const randomProducts = seedData.products
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 2); // Add 2 random products to each cart
+
+      for (const product of randomProducts) {
+        const [dbProduct] = await db
+          .select()
+          .from(products)
+          .where(eq(products.sku, product.sku))
+          .limit(1);
+        if (dbProduct) {
+          await db.insert(cartProduct).values({
+            id: uuidv4(),
+            cartId: cart.id,
+            productId: dbProduct.id,
+          });
+        }
+      }
+    }
+    console.log("Carts and cart products seeded successfully");
+
+    // Seed orders
+    for (const user of seededUsers) {
+      const [userCart] = await db
+        .select()
+        .from(carts)
+        .where(eq(carts.userId, user.id))
+        .limit(1);
+      if (userCart) {
+        const cartItems = await db
+          .select({
+            productId: products.id,
+            productPrice: products.price,
+          })
+          .from(cartProduct)
+          .where(eq(cartProduct.cartId, userCart.id))
+          .innerJoin(products, eq(cartProduct.productId, products.id));
+
+        const totalAmount = cartItems.reduce(
+          (sum, item) => sum + item.productPrice,
+          0
+        );
+
+        await db.insert(orders).values({
+          id: uuidv4(),
+          userId: user.id,
+          cartId: userCart.id,
+          transactionId: uuidv4(),
+          amount: totalAmount,
+        });
+      }
+    }
+    console.log("Orders seeded successfully");
+
     console.log("Database seeded successfully");
   } catch (error) {
     console.error("Error seeding database:", error);

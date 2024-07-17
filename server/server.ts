@@ -82,85 +82,7 @@ app.get("/v1/cart", authenticateToken, async (req: Request, res: Response) => {
 // It extracts the userId from the query params and extracts add/remove from the request body.
 // It finds or creates a cart for the user.
 // If there are items to add, it inserts new cartProduct entries.
-// app.patch(
-//   "/v1/cart",
-//   authenticateToken,
-//   async (req: Request, res: Response) => {
-//     if (!req.user) {
-//       return res.status(401).json({ error: "User not found" });
-//     }
-//     const userId = req.user.userId as string;
-//     if (!userId) {
-//       return res.status(400).json({ error: "userId is required" });
-//     }
 
-//     const { add, remove } = req.body;
-//     console.log("Request Body: ", req.body);
-
-//     try {
-//       console.log("Attempting to find or create cart of userId: ", userId);
-//       let [cart] = await db
-//         .select()
-//         .from(carts)
-//         .where(eq(carts.userId, userId));
-
-//       console.log("Found cart: ", cart);
-
-//       if (!cart) {
-//         console.log("Cart not found, creating a new cart");
-//         [cart] = await db
-//           .insert(carts)
-//           .values({ userId, id: uuidv4() })
-//           .returning();
-//         console.log("New cart created: ", cart);
-//       }
-
-//       if (add && add.length > 0) {
-//         console.log("Adding products to cart: ", add);
-
-//         await db.insert(cartProduct).values(
-//           add.map((productId: string) => ({
-//             id: uuidv4(),
-//             cartId: cart.id,
-//             productId,
-//           }))
-//         );
-//         console.log("Products added to cart");
-//       }
-
-//       if (remove && remove.length > 0) {
-//         console.log("Removing products from cart: ", remove);
-//         await db
-//           .delete(cartProduct)
-//           .where(
-//             and(
-//               eq(cartProduct.cartId, cart.id),
-//               inArray(cartProduct.productId, remove)
-//             )
-//           );
-//         console.log("Products removed from cart");
-//       }
-//       console.log("Fetching updated cart");
-//       const updatedCart = await db
-//         .select()
-//         .from(carts)
-//         .where(eq(carts.id, cart.id))
-//         .leftJoin(cartProduct, eq(carts.id, cartProduct.cartId))
-//         .leftJoin(products, eq(cartProduct.productId, products.id));
-
-//       console.log("Updated cart: ", updatedCart);
-
-//       return res.json(updatedCart);
-//     } catch (error) {
-//       console.log("Error Updating cart: ", error);
-//       if (error instanceof Error) {
-//         console.error("Error message: ", error.message);
-//         console.error("Error stack: ", error.stack);
-//       }
-//       res.status(500).json({ error: "Failed to update cart" });
-//     }
-//   }
-// );
 app.patch(
   "/v1/cart",
   authenticateToken,
@@ -269,55 +191,133 @@ app.patch(
   }
 );
 // Submit an order
-app.post("/v1/order", async (req: Request, res: Response) => {
-  const userId = req.query.userId as string;
-  const cartId = req.query.cartId as string;
+// app.post("/v1/order", authenticateToken, async (req: Request, res: Response) => {
+//   const userId = req.query.userId as string;
+//   const cartId = req.query.cartId as string;
 
-  if (!userId || !cartId) {
-    return res.status(400).json({ error: "userId and cartId are required" });
-  }
+//   if (!userId || !cartId) {
+//     return res.status(400).json({ error: "userId and cartId are required" });
+//   }
 
-  try {
-    // Get everything into the cart first
-    const cartItems = await db
-      .select({
-        cartProductId: cartProduct.id,
-        productId: products.id,
-        productPrice: products.price,
-      })
-      .from(cartProduct)
-      .where(eq(cartProduct.cartId, cartId))
-      .leftJoin(products, eq(cartProduct.productId, products.id));
+//   try {
+//     // Get everything into the cart first
+//     const cartItems = await db
+//       .select({
+//         cartProductId: cartProduct.id,
+//         productId: products.id,
+//         productPrice: products.price,
+//       })
+//       .from(cartProduct)
+//       .where(eq(cartProduct.cartId, cartId))
+//       .leftJoin(products, eq(cartProduct.productId, products.id));
 
-    // Calculate total amount, filtering out any null products
-    const totalAmount = cartItems.reduce((sum, item) => {
-      if (item.productId && item.productPrice) {
-        return sum + item.productPrice;
+//     // Calculate total amount, filtering out any null products
+//     const totalAmount = cartItems.reduce((sum, item) => {
+//       if (item.productId && item.productPrice) {
+//         return sum + item.productPrice;
+//       }
+//       return sum;
+//     }, 0);
+
+//     // Submit the order
+//     const [newOrder] = await db
+//       .insert(orders)
+//       .values({
+//         id: uuidv4(),
+//         userId,
+//         cartId,
+//         transactionId: uuidv4(), // Generate a new transaction ID
+//         amount: totalAmount,
+//       })
+//       .returning();
+
+//     // Clear the cart after submitting the order
+//     await db.delete(cartProduct).where(eq(cartProduct.cartId, cartId));
+
+//     return res.json(newOrder);
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to submit order" });
+//   }
+// });
+app.post(
+  "/v1/order",
+  authenticateToken,
+  async (req: Request, res: Response) => {
+    if (!req.user) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    const userId = req.user.userId as string;
+    const cartId = req.body.cartId as string;
+
+    if (!cartId) {
+      return res.status(400).json({ error: "cartId is required" });
+    }
+
+    try {
+      console.log(`Submitting order for user ${userId} with cart ${cartId}`);
+
+      // Verify the cart belongs to the user
+      const [userCart] = await db
+        .select()
+        .from(carts)
+        .where(and(eq(carts.id, cartId), eq(carts.userId, userId)));
+
+      if (!userCart) {
+        return res.status(404).json({ error: "Cart not found for this user" });
       }
-      return sum;
-    }, 0);
 
-    // Submit the order
-    const [newOrder] = await db
-      .insert(orders)
-      .values({
-        id: uuidv4(),
-        userId,
-        cartId,
-        transactionId: uuidv4(), // Generate a new transaction ID
-        amount: totalAmount,
-      })
-      .returning();
+      // Get everything in the cart
+      const cartItems = await db
+        .select({
+          cartProductId: cartProduct.id,
+          productId: products.id,
+          productPrice: products.price,
+        })
+        .from(cartProduct)
+        .where(eq(cartProduct.cartId, cartId))
+        .leftJoin(products, eq(cartProduct.productId, products.id));
 
-    // Clear the cart after submitting the order
-    await db.delete(cartProduct).where(eq(cartProduct.cartId, cartId));
+      console.log(`Found ${cartItems.length} items in the cart`);
 
-    return res.json(newOrder);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to submit order" });
+      // Calculate total amount, filtering out any null products
+      const totalAmount = cartItems.reduce((sum, item) => {
+        if (item.productId && item.productPrice) {
+          return sum + item.productPrice;
+        }
+        return sum;
+      }, 0);
+
+      console.log(`Total order amount: ${totalAmount}`);
+
+      // Submit the order
+      const [newOrder] = await db
+        .insert(orders)
+        .values({
+          id: uuidv4(),
+          userId,
+          cartId,
+          transactionId: uuidv4(), // Generate a new transaction ID
+          amount: totalAmount,
+        })
+        .returning();
+
+      console.log(`New order created with ID: ${newOrder.id}`);
+
+      // Clear the cart after submitting the order
+      await db.delete(cartProduct).where(eq(cartProduct.cartId, cartId));
+      console.log(`Cleared cart ${cartId}`);
+
+      return res.json(newOrder);
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
+      res.status(500).json({ error: "Failed to submit order" });
+    }
   }
-});
-
+);
 /* ----------------------------- Authentication ----------------------------- */
 
 app.post("/v1/register", async (req: Request, res: Response) => {

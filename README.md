@@ -113,7 +113,7 @@ This a e-commerce application that allows users to perform the following actions
 
 4. **Data Storage**
 
-Schema Design:
+Schema Design
 
 - The database schema is defined in schema.ts using Drizzle ORM. It consists of five main tables:
   - products: Stores product information.
@@ -122,7 +122,7 @@ Schema Design:
   - cart_product: A junction table for the many-to-many relationship between carts and products.
   - orders: Stores order information, linking users and carts
 
-- Relationships:
+Relationships
 
 The schema defines relationships between tables using Drizzle ORM's relations function:
   - Products have many CartProducts
@@ -131,9 +131,9 @@ The schema defines relationships between tables using Drizzle ORM's relations fu
   - CartProducts belong to a Cart and a Product
   - Orders belong to a User and a Cart
 
-- Data Seeding:
-- The database is seeded with initial data using the seedDatabase function in ./server/db/seedData.ts. This function performs the following operations:
+Data Seeding
 
+The database is seeded with initial data using the seedDatabase function in ./server/db/seedData.ts. This function performs the following operations:
   - Inserts sample products into the products table.
   - Creates user accounts with hashed passwords.
   - Generates shopping carts for each user with random products.

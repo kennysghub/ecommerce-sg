@@ -79,7 +79,7 @@ Server will run on `http://localhost:3000`.
 ```bash
 npm run dev
 ```
-You can view the app on `http://localhost:5173`. After creating an account, you'll be able to view the products and shop around. No refunds!
+You can view the app on `http://localhost:5173`. *After* creating an account, you'll be able to view the products and shop around. No refunds!
 
 
 ## Overview

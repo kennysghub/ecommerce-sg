@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-This course repository requires Node version 20+ and a [TursoDB account](https://turso.tech/)
+This course repository requires Node.js and a [TursoDB account](https://turso.tech/)
 
 Install dependencies in the root directory and the client directory, respectively. 
 
@@ -148,21 +148,3 @@ Areas for Future Testing:
 - End-to-End Tests: To validate user flows and interactions.
 
 
-### Frontend
-- React
-- React Context API
-- React Router
-React Hooks:
-- useReducer
-- useCallback
-- useMemo
-- useEffect
-- useState
-
-### Backend
-- Node.js
-- Express
-
-Data Storage:
-- Turso (Open Source fork of SQLite)
-- DrizzleORM (TypeScript ORM)

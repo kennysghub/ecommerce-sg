@@ -1,11 +1,11 @@
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
-import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
-import Checkout from "./pages/Checkout";
-import Cart from "./components/Cart";
-import NotFound from "./pages/NotFound";
+import { Routes, Route } from 'react-router-dom';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import Navbar from './components/Navbar';
+import Cart from './components/Cart';
+import Home from './pages/Home';
+import Checkout from './pages/Checkout';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   const content = (

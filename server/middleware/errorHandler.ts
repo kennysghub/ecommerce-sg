@@ -4,7 +4,7 @@ export const errorHandler = (
   err: unknown,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const defaultErr = {
     log: "Express error handler caught unknown middleware error",

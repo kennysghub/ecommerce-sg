@@ -43,7 +43,7 @@ export type ReducerAction = {
 
 const reducer = (
   state: CartStateType,
-  action: ReducerAction
+  action: ReducerAction,
 ): CartStateType => {
   switch (action.type) {
     /* ----------------------------------- ADD ---------------------------------- */
@@ -54,10 +54,10 @@ const reducer = (
       }
       const { sku, name, price, imageURL } = action.payload;
       const filteredCart: CartItemType[] = state.cart.filter(
-        (item) => item.sku !== sku
+        (item) => item.sku !== sku,
       );
       const itemExists: CartItemType | undefined = state.cart.find(
-        (item) => item.sku === sku
+        (item) => item.sku === sku,
       );
       const qty: number = itemExists ? itemExists.qty + 1 : 1;
       return {
@@ -69,27 +69,24 @@ const reducer = (
     /* --------------------------------- REMOVE --------------------------------- */
     case REDUCER_ACTION_TYPE.REMOVE: {
       if (!action.payload) {
-        // Message we'd expect in development before anything went into production
         throw new Error("action.payload missing in REMOVE action");
       }
       //
       const { sku } = action.payload;
       const filteredCart: CartItemType[] = state.cart.filter(
-        (item) => item.sku !== sku
+        (item) => item.sku !== sku,
       );
       return { ...state, cart: [...filteredCart] };
-      // return [{ ...state, cart: [...filteredCart] }, "REMOVE"];
     }
     /* -------------------------------- QUANTITY -------------------------------- */
     case REDUCER_ACTION_TYPE.QUANTITY: {
       if (!action.payload) {
-        // Message we'd expect in development before anything went into production
         throw new Error("action.payload missing in QUANTITY action");
       }
       const { sku, qty } = action.payload;
 
       const itemExists: CartItemType | undefined = state.cart.find(
-        (item) => item.sku === sku
+        (item) => item.sku === sku,
       );
       // Guard
       if (!itemExists) {
@@ -97,15 +94,13 @@ const reducer = (
       }
       const updatedItem: CartItemType = { ...itemExists, qty };
       const filteredCart: CartItemType[] = state.cart.filter(
-        (item) => item.sku !== sku
+        (item) => item.sku !== sku,
       );
       return { ...state, cart: [...filteredCart, updatedItem] };
-      // return [{ ...state, cart: [...filteredCart, updatedItem] }, "QUANTITY"];
     }
     /* --------------------------------- SUBMIT --------------------------------- */
     case REDUCER_ACTION_TYPE.SUBMIT: {
       return { ...state, cart: [] };
-      // return [{ ...state, cart: [] }, "SUBMIT"];
     }
     default:
       throw new Error("Unidentified reducer action type");
@@ -144,9 +139,8 @@ const useCartContext = (initCartState: CartStateType) => {
         console.error("Failed to update item quantity:", error);
       }
     },
-    []
+    [],
   );
-  //
 
   const totalItems: number = state.cart.reduce((previousValue, cartItem) => {
     return previousValue + cartItem.qty;
@@ -158,7 +152,7 @@ const useCartContext = (initCartState: CartStateType) => {
   }).format(
     state.cart.reduce((previousValue, cartItem) => {
       return previousValue + cartItem.qty * cartItem.price;
-    }, 0)
+    }, 0),
   );
 
   // Sorting cart in order

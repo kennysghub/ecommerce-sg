@@ -1,1 +1,116 @@
-{"result":[{"scriptId":"989","url":"file:///Users/kenny/Desktop/Dev/sweetgreen/ecommerce/client/src/test/setup.ts","functions":[{"functionName":"","ranges":[{"startOffset":0,"endOffset":715,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":13,"endOffset":715,"count":1}],"isBlockCoverage":true}]},{"scriptId":"1253","url":"file:///Users/kenny/Desktop/Dev/sweetgreen/ecommerce/client/src/__tests__/components/Cart.test.tsx","functions":[{"functionName":"","ranges":[{"startOffset":0,"endOffset":10538,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":13,"endOffset":10538,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":325,"endOffset":622,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":351,"endOffset":618,"count":2}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":666,"endOffset":1017,"count":1}],"isBlockCoverage":true},{"functionName":"default","ranges":[{"startOffset":686,"endOffset":1014,"count":6}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":1424,"endOffset":4396,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":1470,"endOffset":2113,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":2171,"endOffset":2618,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":2676,"endOffset":3336,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":3394,"endOffset":4392,"count":1}],"isBlockCoverage":true}]},{"scriptId":"1370","url":"file:///Users/kenny/Desktop/Dev/sweetgreen/ecommerce/client/src/components/Cart.tsx","functions":[{"functionName":"","ranges":[{"startOffset":0,"endOffset":8216,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":13,"endOffset":8216,"count":1}],"isBlockCoverage":true},{"functionName":"Cart","ranges":[{"startOffset":701,"endOffset":4446,"count":5},{"startOffset":1020,"endOffset":1277,"count":1},{"startOffset":1278,"endOffset":4133,"count":4}],"isBlockCoverage":true},{"functionName":"onSubmitOrder","ranges":[{"startOffset":907,"endOffset":988,"count":1}],"isBlockCoverage":true},{"functionName":"","ranges":[{"startOffset":1738,"endOffset":2165,"count":6}],"isBlockCoverage":true}]}]}
+{
+  "result": [
+    {
+      "scriptId": "989",
+      "url": "file:///Users/kenny/Desktop/Dev/sweetgreen/ecommerce/client/src/test/setup.ts",
+      "functions": [
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 0, "endOffset": 715, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 13, "endOffset": 715, "count": 1 }],
+          "isBlockCoverage": true
+        }
+      ]
+    },
+    {
+      "scriptId": "1253",
+      "url": "file:///Users/kenny/Desktop/Dev/sweetgreen/ecommerce/client/src/__tests__/components/Cart.test.tsx",
+      "functions": [
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 0, "endOffset": 10538, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 13, "endOffset": 10538, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 325, "endOffset": 622, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 351, "endOffset": 618, "count": 2 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 666, "endOffset": 1017, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "default",
+          "ranges": [{ "startOffset": 686, "endOffset": 1014, "count": 6 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 1424, "endOffset": 4396, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 1470, "endOffset": 2113, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 2171, "endOffset": 2618, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 2676, "endOffset": 3336, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 3394, "endOffset": 4392, "count": 1 }],
+          "isBlockCoverage": true
+        }
+      ]
+    },
+    {
+      "scriptId": "1370",
+      "url": "file:///Users/kenny/Desktop/Dev/sweetgreen/ecommerce/client/src/components/Cart.tsx",
+      "functions": [
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 0, "endOffset": 8216, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 13, "endOffset": 8216, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "Cart",
+          "ranges": [
+            { "startOffset": 701, "endOffset": 4446, "count": 5 },
+            { "startOffset": 1020, "endOffset": 1277, "count": 1 },
+            { "startOffset": 1278, "endOffset": 4133, "count": 4 }
+          ],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "onSubmitOrder",
+          "ranges": [{ "startOffset": 907, "endOffset": 988, "count": 1 }],
+          "isBlockCoverage": true
+        },
+        {
+          "functionName": "",
+          "ranges": [{ "startOffset": 1738, "endOffset": 2165, "count": 6 }],
+          "isBlockCoverage": true
+        }
+      ]
+    }
+  ]
+}

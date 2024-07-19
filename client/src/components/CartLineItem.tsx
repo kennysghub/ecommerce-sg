@@ -1,8 +1,8 @@
 import { ChangeEvent, ReactElement, memo } from "react";
+import { updateCartItemQuantity } from "../api/CartService";
 import { CartItemType } from "../context/CartProvider";
 import { ReducerAction } from "../context/CartProvider";
 import { ReducerActionType } from "../context/CartProvider";
-import { updateCartItemQuantity } from "../api/CartService";
 
 type PropsType = {
   item: CartItemType;
@@ -15,7 +15,7 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
   const lineTotal: number = item.qty * item.price;
   const highestQty: number = 20 > item.qty ? 20 : item.qty;
   const optionValues: number[] = [...Array(highestQty).keys()].map(
-    (i) => i + 1
+    (i) => i + 1,
   );
   const options: ReactElement[] = optionValues.map((val) => {
     return (
@@ -91,7 +91,7 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
 // Function to compare:
 const areItemsEqual = (
   { item: prevItem }: PropsType,
-  { item: nextItem }: PropsType
+  { item: nextItem }: PropsType,
 ) => {
   return Object.keys(prevItem).every((key) => {
     // Comparing every key, returns true if items equal.
@@ -107,7 +107,7 @@ const areItemsEqual = (
 // Always new object passed in so we won't have referential equality.
 const MemoizedCartLineItem = memo<typeof CartLineItem>(
   CartLineItem,
-  areItemsEqual
+  areItemsEqual,
 );
 // If you change the quantity of one of the CartLineItems, the others should not re-render.
 

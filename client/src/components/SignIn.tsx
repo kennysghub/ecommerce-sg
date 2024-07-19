@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { signIn, AuthResponse } from "../api/AuthService";
 import { useNavigate } from "react-router-dom";
+import { signIn, AuthResponse } from "../api/AuthService";
+import { useAuth } from "../context/AuthContext";
 
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const {setIsAuthenticated} = useAuth();
 
   const navigate = useNavigate();
 
@@ -15,6 +17,7 @@ const SignIn: React.FC = () => {
       const response: AuthResponse = await signIn(email, password);
       console.log("Signed in successfully", response);
       localStorage.setItem("token", response.token);
+      setIsAuthenticated(true)
       navigate("/home");
     } catch (err) {
       setError("Failed to sign in");

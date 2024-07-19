@@ -38,7 +38,7 @@ export const getCart = async (req: Request, res: Response) => {
 export const updateCart = async (
   // req: Request<{}, {}, CartUpdateRequest>,
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ) => {
   if (!req.user) {
     return res.status(401).json({ error: "User not authenticated" });
@@ -77,8 +77,8 @@ export const updateCart = async (
           .where(
             and(
               eq(cartProduct.cartId, cart.id),
-              eq(cartProduct.productId, product.id)
-            )
+              eq(cartProduct.productId, product.id),
+            ),
           );
 
         if (existingCartProduct) {
@@ -117,8 +117,8 @@ export const updateCart = async (
         .where(
           and(
             eq(cartProduct.cartId, cart.id),
-            inArray(cartProduct.productId, productIdsToRemove)
-          )
+            inArray(cartProduct.productId, productIdsToRemove),
+          ),
         );
       console.log("Products removed from cart");
     }
@@ -139,8 +139,8 @@ export const updateCart = async (
             .where(
               and(
                 eq(cartProduct.cartId, cart.id),
-                eq(cartProduct.productId, product.id)
-              )
+                eq(cartProduct.productId, product.id),
+              ),
             );
         }
       }

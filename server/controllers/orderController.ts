@@ -14,7 +14,7 @@ export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
   }
   const userId = req.user.userId as string;
 
-  //* THIS FINDS THE cart id
+  // This finds the cart id
   let [cart] = await db.select().from(carts).where(eq(carts.userId, userId));
 
   const cartId = cart.id;
@@ -65,7 +65,7 @@ export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
         id: uuidv4(),
         userId,
         cartId,
-        transactionId: uuidv4(), // Generate a new transaction ID
+        transactionId: uuidv4(),
         amount: totalAmount,
       })
       .returning();

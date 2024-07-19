@@ -1,21 +1,30 @@
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
+import Checkout from "./pages/Checkout";
 import Cart from "./components/Cart";
-import ProductList from "./components/ProductList";
-import { useState } from "react";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  const [viewCart, setViewCart] = useState<boolean>(false);
-  const pageContent = viewCart ? <Cart /> : <ProductList />;
-
+const App = () => {
   const content = (
     <>
-      <Header viewCart={viewCart} setViewCart={setViewCart} />
-      {pageContent}
-      <Footer viewCart={viewCart} />
+      <Navbar />
+      <>
+        <Routes>
+          <Route path="/" element={<SignIn />} />
+          <Route path="/home" element={<Home />} />
+
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </>
     </>
   );
   return content;
-}
+};
 
 export default App;

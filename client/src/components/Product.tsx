@@ -15,8 +15,12 @@ const Product = ({
   REDUCER_ACTIONS,
   inCart,
 }: PropsType): ReactElement => {
-  const onAddToCart = () =>
-    dispatch({ type: REDUCER_ACTIONS.ADD, payload: { ...product, qty: 1 } });
+  const onAddToCart = () => {
+    dispatch({
+      type: REDUCER_ACTIONS.ADD,
+      payload: { ...product, qty: 1 },
+    });
+  };
 
   const itemInCart = inCart ? " -> Item in Cart: ✅" : null;
 
@@ -31,7 +35,14 @@ const Product = ({
         }).format(product.price)}
         {itemInCart}
       </p>
-      <button onClick={onAddToCart}>Add to Cart</button>
+      <p>{product.description}</p>
+      <button
+        className="product__button"
+        aria-label={`Add ${product.name} to cart`}
+        onClick={onAddToCart}
+      >
+        Add to Cart
+      </button>
     </article>
   );
 

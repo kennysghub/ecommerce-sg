@@ -1,4 +1,10 @@
-import { createContext, ReactElement, useState, useEffect } from "react";
+import {
+  createContext,
+  ReactElement,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 export type ProductType = {
   id: string;
@@ -25,31 +31,55 @@ type ChildrenType = { children?: ReactElement | ReactElement[] };
 export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
   const [products, setProducts] = useState<ProductType[]>(initState);
 
-  useEffect(() => {
+  const fetchProducts = useCallback(async (): Promise<void> => {
     console.log("Fetching products...");
-    const fetchProducts = async (): Promise<ProductType[]> => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.log("No token found, user might not be authenticated.");
-        return [];
-      }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("No token found, user might not be authenticated.");
+      return;
+    }
 
-      const data = await fetch("http://localhost:3000/v1/products", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => res.json())
-
-        .catch((err) => {
-          if (err instanceof Error) console.log(err.message);
-        });
-      console.log("data: ", data);
-      return data;
-    };
-
-    fetchProducts().then((products) => setProducts(products));
+    const data = await fetch("http://localhost:3000/v1/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .catch((err) => {
+        if (err instanceof Error) console.log(err.message);
+      });
+    console.log("data: ", data);
+    setProducts(data);
   }, []);
+
+  // useEffect(() => {
+  //   console.log("Fetching products...");
+  //   // const fetchProducts = async (): Promise<ProductType[]> => {
+  //   //   const token = localStorage.getItem("token");
+  //   //   if (!token) {
+  //   //     console.log("No token found, user might not be authenticated.");
+  //   //     return [];
+  //   //   }
+
+  //   //   const data = await fetch("http://localhost:3000/v1/products", {
+  //   //     headers: {
+  //   //       Authorization: `Bearer ${token}`,
+  //   //     },
+  //   //   })
+  //   //     .then((res) => res.json())
+
+  //   //     .catch((err) => {
+  //   //       if (err instanceof Error) console.log(err.message);
+  //   //     });
+  //   //   console.log("data: ", data);
+  //   //   return data;
+  //   // };
+
+  //   // fetchProducts().then((products) => setProducts(products));
+  // }, []);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   return (
     <ProductsContext.Provider value={{ products }}>

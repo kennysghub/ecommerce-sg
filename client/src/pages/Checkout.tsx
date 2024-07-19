@@ -1,13 +1,23 @@
 import { useState } from "react";
 import useCart from "../hooks/useCart";
 import CartLineItem from "../components/CartLineItem";
+import { submitOrder } from "../api/OrderService";
 // import { useAuth } from "../context/AuthContext";
 const Checkout = () => {
   const { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart } = useCart();
+  const [orderAmount, setOrderAmount] = useState<number>(0);
+  const [transactionId, setTransactionId] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [confirm, setConfirm] = useState<boolean>(false);
   // const { user, loading } = useAuth();
-
-  const onSubmitOrder = () => {
+  console.log("cart", cart);
+  const onSubmitOrder = async () => {
+    const res = await submitOrder();
+    dispatch({ type: REDUCER_ACTIONS.SUBMIT });
+    console.log("TransactionID: ", res.transactionId);
+    console.log("Total Amount: ", res.amount);
+    setTransactionId(res.transactionId);
+    setOrderAmount(res.amount);
     setConfirm(true);
   };
   return (
@@ -38,6 +48,12 @@ const Checkout = () => {
         >
           Place Order
         </button>
+        {confirm && (
+          <div>
+            <p>Transaction ID: {transactionId}</p>
+            <p>Order Amount: {orderAmount}</p>
+          </div>
+        )}
       </div>
     </div>
   );

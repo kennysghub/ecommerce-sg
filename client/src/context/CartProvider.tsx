@@ -1,4 +1,15 @@
-import { useReducer, useMemo, createContext, ReactElement } from "react";
+import {
+  useReducer,
+  useMemo,
+  createContext,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
+import { updateCart, updateCartItemQuantity } from "../api/CartService";
+
 /* ---------------------------- Type Definitions ---------------------------- */
 // Represents individual items.
 export type CartItemType = {
@@ -43,6 +54,7 @@ const reducer = (
   action: ReducerAction
 ): CartStateType => {
   switch (action.type) {
+    /* ----------------------------------- ADD ---------------------------------- */
     case REDUCER_ACTION_TYPE.ADD: {
       if (!action.payload) {
         // Message we'd expect in development before anything went into production
@@ -61,6 +73,8 @@ const reducer = (
         cart: [...filteredCart, { sku, name, price, qty, imageURL }],
       };
     }
+
+    /* --------------------------------- REMOVE --------------------------------- */
     case REDUCER_ACTION_TYPE.REMOVE: {
       if (!action.payload) {
         // Message we'd expect in development before anything went into production
@@ -72,7 +86,9 @@ const reducer = (
         (item) => item.sku !== sku
       );
       return { ...state, cart: [...filteredCart] };
+      // return [{ ...state, cart: [...filteredCart] }, "REMOVE"];
     }
+    /* -------------------------------- QUANTITY -------------------------------- */
     case REDUCER_ACTION_TYPE.QUANTITY: {
       if (!action.payload) {
         // Message we'd expect in development before anything went into production
@@ -92,7 +108,9 @@ const reducer = (
         (item) => item.sku !== sku
       );
       return { ...state, cart: [...filteredCart, updatedItem] };
+      // return [{ ...state, cart: [...filteredCart, updatedItem] }, "QUANTITY"];
     }
+    /* --------------------------------- SUBMIT --------------------------------- */
     case REDUCER_ACTION_TYPE.SUBMIT: {
       // Emptying the cart, include logic if submitting to server or somewhere
       //TODO: Submit the cart to backend.
@@ -100,6 +118,7 @@ const reducer = (
       console.log("Submitting cart...");
       console.log("Cart State: ", state.cart);
       return { ...state, cart: [] };
+      // return [{ ...state, cart: [] }, "SUBMIT"];
     }
     default:
       throw new Error("Unidentified reducer action type");
@@ -115,12 +134,59 @@ const useCartContext = (initCartState: CartStateType) => {
   //  2. Dispatch function
   // The dispatch function is used to send actions to the reducer. When you call dispatch(action), React will call the reducer function we created with the current state, and the action we provide to the function call, then it will replace the state with the return value.
   const [state, dispatch] = useReducer(reducer, initCartState);
+  // Added state for cartId
+  const [cartId, setCartId] = useState<string | null>(null);
 
   //TODO: To update the cart on backend database, we can use React's useEffect(). This will auto sync cart w/ db whenever it changes.
 
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
+
+  // Updated useEffect to handle the updateCart response correctly
+  // Updated useEffect to work with your existing updateCart function
+  // useEffect(() => {
+  //   const syncCartWithBackend = async () => {
+  //     try {
+  //       const itemsToAdd = state.cart.map((item) => item.sku);
+  //       const res = await updateCart(itemsToAdd, []); // Passing an array of SKUs to add, and an empty array for removals
+  //       console.log("syncing cart with backend.... updateCart res: ", res);
+  //     } catch (error) {
+  //       console.error("Failed to sync cart with backend:", error);
+  //     }
+  //   };
+
+  //   syncCartWithBackend();
+  // }, [state.cart]);
+  useEffect(() => {
+    const syncCartWithBackend = async () => {
+      try {
+        // Assuming your updateCart function can handle the entire cart state
+        await updateCart(state.cart);
+      } catch (error) {
+        console.error("Failed to sync cart with backend:", error);
+      }
+    };
+
+    syncCartWithBackend();
+  }, [state.cart]);
+  // New function to handle quantity updates
+  const updateItemQuantity = useCallback(
+    async (sku: string, quantity: number) => {
+      try {
+        await updateCartItemQuantity(sku, quantity);
+        dispatch({
+          type: REDUCER_ACTION_TYPE.QUANTITY,
+          payload: { sku, qty: quantity } as CartItemType,
+        });
+      } catch (error) {
+        console.error("Failed to update item quantity:", error);
+      }
+    },
+    []
+  );
+  //
+
   // Defining total items to display.
   const totalItems: number = state.cart.reduce((previousValue, cartItem) => {
     return previousValue + cartItem.qty;
@@ -149,6 +215,9 @@ const useCartContext = (initCartState: CartStateType) => {
     totalItems,
     totalPrice,
     cart,
+    cartId,
+    setCartId,
+    updateItemQuantity,
   };
 };
 
@@ -160,6 +229,7 @@ const initCartContextState: UseCartContextType = {
   totalItems: 0,
   totalPrice: "",
   cart: [],
+  updateItemQuantity: async () => {},
 };
 
 export const CartContext =

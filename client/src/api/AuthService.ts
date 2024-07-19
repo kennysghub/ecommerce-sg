@@ -45,3 +45,8 @@ export const signIn = async (
 
   return response.json();
 };
+
+export const signOut = (): void => {
+  console.log("Removing token from local storage and signing user out...");
+  localStorage.removeItem("token");
+};

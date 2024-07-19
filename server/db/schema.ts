@@ -46,6 +46,7 @@ export const carts = sqliteTable("carts", {
   userId: text("user_id").references(() => users.id),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
+  total: integer("total").notNull().default(0),
 });
 
 //  cartProduct table- a junction table that sets a many-to-many relationship between carts and products.
@@ -53,6 +54,8 @@ export const cartProduct = sqliteTable("cart_product", {
   id: id(),
   cartId: text("cart_id").references(() => carts.id),
   productId: text("product_id").references(() => products.id),
+  quantity: integer("quantity").notNull().default(1),
+  price: integer("price").notNull().default(0),
 });
 
 // orders table- stores order information, linking users and carts.

@@ -1,5 +1,7 @@
 import Nav from "./Nav";
 import useCart from "../hooks/useCart";
+import { signOut } from "../api/AuthService";
+import { useNavigate } from "react-router-dom";
 
 type PropsType = {
   viewCart: boolean;
@@ -8,6 +10,12 @@ type PropsType = {
 
 const Header = ({ viewCart, setViewCart }: PropsType) => {
   const { totalItems, totalPrice } = useCart();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/signin");
+  };
 
   const content = (
     <header className="header">
@@ -18,6 +26,7 @@ const Header = ({ viewCart, setViewCart }: PropsType) => {
           <p>Total Price:{totalPrice}</p>
         </div>
       </div>
+      <button onClick={handleSignOut}>Sign Out</button>
       <Nav viewCart={viewCart} setViewCart={setViewCart} />
     </header>
   );

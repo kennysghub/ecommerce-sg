@@ -2,7 +2,7 @@ import { ChangeEvent, ReactElement, memo } from "react";
 import { CartItemType } from "../context/CartProvider";
 import { ReducerAction } from "../context/CartProvider";
 import { ReducerActionType } from "../context/CartProvider";
-
+import { updateCartItemQuantity } from "../api/CartService";
 type PropsType = {
   item: CartItemType;
   dispatch: React.Dispatch<ReducerAction>;
@@ -27,11 +27,18 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
     );
   });
 
-  const onChangeQty = (e: ChangeEvent<HTMLSelectElement>) => {
-    dispatch({
-      type: REDUCER_ACTIONS.QUANTITY,
-      payload: { ...item, qty: Number(e.target.value) },
-    });
+  const onChangeQty = async (e: ChangeEvent<HTMLSelectElement>) => {
+    const newQty = Number(e.target.value);
+    try {
+      await updateCartItemQuantity(item.sku, newQty);
+      dispatch({
+        type: REDUCER_ACTIONS.QUANTITY,
+        // payload: { ...item, qty: Number(e.target.value) },
+        payload: { ...item, qty: newQty },
+      });
+    } catch (error) {
+      console.error("Failed to update quantity:", error);
+    }
   };
 
   const onRemoveFromCart = () =>

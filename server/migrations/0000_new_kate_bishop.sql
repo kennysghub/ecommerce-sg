@@ -2,6 +2,8 @@ CREATE TABLE `cart_product` (
 	`id` text PRIMARY KEY NOT NULL,
 	`cart_id` text,
 	`product_id` text,
+	`quantity` integer DEFAULT 1 NOT NULL,
+	`price` integer DEFAULT 0 NOT NULL,
 	FOREIGN KEY (`cart_id`) REFERENCES `carts`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON UPDATE no action ON DELETE no action
 );
@@ -11,6 +13,7 @@ CREATE TABLE `carts` (
 	`user_id` text,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`total` integer DEFAULT 0 NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint

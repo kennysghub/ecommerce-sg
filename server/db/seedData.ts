@@ -16,7 +16,7 @@ const seedData = {
     {
       sku: "item0001",
       name: "Dyson Outsize plus",
-      price: 44999,
+      price: 450,
       imageURL:
         "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/images/products/hero/448114-01.png?$responsive$&cropPathE=desktop&fit=stretch,1&wid=1920",
       description:
@@ -25,7 +25,7 @@ const seedData = {
     {
       sku: "item0002",
       name: "Bissel CleanView Swivel Pet",
-      price: 11844,
+      price: 118,
       imageURL:
         "https://m.media-amazon.com/images/I/71pzkmU3PuL._AC_SL1500_.jpg",
       description:
@@ -34,7 +34,7 @@ const seedData = {
     {
       sku: "item0003",
       name: "Bissel Featherweight Stick",
-      price: 2999,
+      price: 29,
       imageURL:
         "https://m.media-amazon.com/images/I/71Ajq3rQuOL._AC_SL1500_.jpg",
       description:
@@ -43,7 +43,7 @@ const seedData = {
     {
       sku: "item0004",
       name: "Shark Pet Cordless Stick",
-      price: 14999,
+      price: 149,
       imageURL:
         "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6359/6359269_sd.jpg;maxHeight=2000;maxWidth=2000",
       description:
@@ -52,7 +52,7 @@ const seedData = {
     {
       sku: "item0005",
       name: "LVAC-200 Cordless Vacuum",
-      price: 19999,
+      price: 199,
       imageURL:
         "https://levoit.com/cdn/shop/files/lvac-200-cordless-vacuum-437899.jpg?v=1715751607&width=768",
       description:
@@ -61,7 +61,7 @@ const seedData = {
     {
       sku: "item0006",
       name: "Black+Decker SUMMITSERIES Select Cordless Stick",
-      price: 29999,
+      price: 299,
       imageURL:
         "https://cdn.shopify.com/s/files/1/0640/1409/0461/files/4832d80ef30d1304fc97b45d211ccdbd1c92c8b7.jpg",
       description:

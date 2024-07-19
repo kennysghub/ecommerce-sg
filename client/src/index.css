@@ -145,7 +145,7 @@ img {
   max-height: 300px;
   object-fit: cover;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
   margin-bottom: 16px;
 }
 
@@ -180,7 +180,7 @@ img {
 
 .product p:last-of-type {
   font-weight: bold;
-  color: #007bff;
+  color: #24a027;
 }
 
 /* General styling for the product component */
@@ -271,7 +271,7 @@ img {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 16px;
     padding: 10px; /* Add padding around the image */
-    background-color: #fff; /* Add background color to enhance padding */
+    /* background-color: #fff; Add background color to enhance padding */
   }
   
   /* Styling for the add to cart button */
@@ -486,9 +486,7 @@ img {
     gap: 1em;
 } */
 
-img{
-    box-shadow: ;
-}
+
 
 @media screen and (min-width: 601px) {
     .product {
@@ -588,5 +586,36 @@ img{
   .auth-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+  }
+  .receipt {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .receipt h2, .receipt h3 {
+    margin-top: 0;
+  }
+  
+  .receipt p {
+    margin: 5px 0;
+  }
+  
+  .receipt__items {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .receipt__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .receipt__item span {
+    margin-right: 10px;
   }
   

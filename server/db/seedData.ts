@@ -83,23 +83,6 @@ const seedData = {
   ],
 };
 
-// async function seedDatabase() {
-//   try {
-//     for (const product of seedData.products) {
-//       await db.insert(products).values({
-//         sku: product.sku,
-//         name: product.name,
-//         price: product.price,
-//         imageURL: product.imageURL,
-//         description: product.description,
-//       });
-//     }
-//     console.log("Database seeded successfully");
-//   } catch (error) {
-//     console.error("Error seeding database:", error);
-//   }
-// }
-
 async function seedDatabase() {
   try {
     // Seed products
@@ -122,7 +105,7 @@ async function seedDatabase() {
       const [seededUser] = await db
         .insert(users)
         .values({
-          id: uuidv4(), // This is fine as it matches your server-side user creation
+          id: uuidv4(), // This matches server-side user creation
           name: user.name,
           email: user.email,
           password: hashedPassword,
@@ -145,7 +128,7 @@ async function seedDatabase() {
       // Add random products to each cart
       const randomProducts = seedData.products
         .sort(() => 0.5 - Math.random())
-        .slice(0, 2); // Add 2 random products to each cart
+        .slice(0, 2); // This adds 2 random products to each cart.
 
       for (const product of randomProducts) {
         const [dbProduct] = await db

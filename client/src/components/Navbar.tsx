@@ -6,7 +6,8 @@ const Navbar = () => {
       <nav className="nav-links">
         <Link to="/">Sign In</Link>
         <Link to="/signup">Sign Up</Link>
-        <Link to="/checkout">Checkout</Link>
+        {/* <Link to="/checkout">Checkout</Link> */}
+        <Link to="/cart">Cart</Link>
       </nav>
     </div>
   );

@@ -1,7 +1,6 @@
 import { ProductType } from "../context/ProductsProvider";
 import { ReducerActionType, ReducerAction } from "../context/CartProvider";
 import { ReactElement, memo } from "react";
-import { updateCart } from "../api/CartService";
 
 type PropsType = {
   product: ProductType;
@@ -16,40 +15,6 @@ const Product = ({
   REDUCER_ACTIONS,
   inCart,
 }: PropsType): ReactElement => {
-  // const syncCart = async () => {
-  //   try {
-  //     console.log('SYNCING CART: ')
-  //     await updateCart([product.sku], []);
-  //   } catch (error) {
-  //     console.error("Failed to sync cart with backend:", error);
-  //     // You might want to show an error message to the user here
-  //   }
-  // };
-
-  // const onAddToCart = async () => {
-  //   await syncCart();
-
-  //   return dispatch({
-  //     type: REDUCER_ACTIONS.ADD,
-  //     payload: { ...product, qty: 1 },
-  //   });
-  // };
-  // const onAddToCart = async () => {
-  //   try {
-  //     // Call the backend to add the item to the cart
-  //     // const updatedCart = await updateCart([product.sku], []);
-
-  //     // console.log("UPDATED CART: ", updatedCart);
-  //     // Update the frontend state based on the backend response
-  //     dispatch({
-  //       type: REDUCER_ACTIONS.ADD,
-  //       payload: { ...product, qty: 1 }, // Set initial quantity to 1
-  //     });
-  //   } catch (error) {
-  //     console.error("Failed to add item to cart:", error);
-  //     // Show an error message to the user
-  //   }
-  // };
   const onAddToCart = () => {
     dispatch({
       type: REDUCER_ACTIONS.ADD,
@@ -71,7 +36,13 @@ const Product = ({
         {itemInCart}
       </p>
       <p>{product.description}</p>
-      <button onClick={onAddToCart}>Add to Cart</button>
+      <button
+        className="product__button"
+        aria-label={`Add ${product.name} to cart`}
+        onClick={onAddToCart}
+      >
+        Add to Cart
+      </button>
     </article>
   );
 

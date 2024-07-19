@@ -1,19 +1,20 @@
 import { useState } from "react";
 import useCart from "../hooks/useCart";
 import CartLineItem from "../components/CartLineItem";
-import { submitOrder } from "../api/OrderService";
-// import { useAuth } from "../context/AuthContext";
+import { submitOrder, IOrderResponse } from "../api/OrderService";
+import Receipt from "../components/Receipt";
+
 const Checkout = () => {
   const { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart } = useCart();
   const [orderAmount, setOrderAmount] = useState<number>(0);
   const [transactionId, setTransactionId] = useState<string>("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const [confirm, setConfirm] = useState<boolean>(false);
-  // const { user, loading } = useAuth();
-  console.log("cart", cart);
+
   const onSubmitOrder = async () => {
-    const res = await submitOrder();
+    const res: IOrderResponse = await submitOrder();
     dispatch({ type: REDUCER_ACTIONS.SUBMIT });
+    console.log("Res: ", res);
     console.log("TransactionID: ", res.transactionId);
     console.log("Total Amount: ", res.amount);
     setTransactionId(res.transactionId);
@@ -49,10 +50,7 @@ const Checkout = () => {
           Place Order
         </button>
         {confirm && (
-          <div>
-            <p>Transaction ID: {transactionId}</p>
-            <p>Order Amount: {orderAmount}</p>
-          </div>
+          <Receipt transactionId={transactionId} amount={orderAmount} />
         )}
       </div>
     </div>

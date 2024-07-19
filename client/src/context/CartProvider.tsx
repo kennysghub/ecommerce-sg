@@ -10,7 +10,6 @@ import {
 
 import { updateCart, updateCartItemQuantity } from "../api/CartService";
 
-/* ---------------------------- Type Definitions ---------------------------- */
 // Represents individual items.
 export type CartItemType = {
   sku: string;
@@ -23,13 +22,11 @@ export type CartItemType = {
 // CartStateType, is an object with a cart property that holds an array of CartItemType.
 type CartStateType = { cart: CartItemType[] };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const initCartState: CartStateType = {
-  cart: [],
-};
-/* -------------------------------------------------------------------------- */
+// const initCartState: CartStateType = {
+//   cart: [],
+// };
 
-// ReducerAction is a type. It's an object with string constants for each action type.
+// ReducerAction type
 const REDUCER_ACTION_TYPE = {
   ADD: "ADD",
   REMOVE: "REMOVE",
@@ -39,15 +36,10 @@ const REDUCER_ACTION_TYPE = {
 
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
 
-// - It defines the structure of the actions. The actions have a type and a payload.
 export type ReducerAction = {
   type: string;
   payload?: CartItemType;
 };
-// reducer is function that takes in the CURRENT state and an action.
-// This reducer function handles -state updates- based on dispatched actions.
-// It uses a switch statement to figure out which action to perform, then returns a new state object.
-//* This reducer function is pure and stateless. It does NOT modify existing state. Instead, it creates and returns and new state object.
 
 const reducer = (
   state: CartStateType,
@@ -112,11 +104,6 @@ const reducer = (
     }
     /* --------------------------------- SUBMIT --------------------------------- */
     case REDUCER_ACTION_TYPE.SUBMIT: {
-      // Emptying the cart, include logic if submitting to server or somewhere
-      //TODO: Submit the cart to backend.
-
-      console.log("Submitting cart...");
-      console.log("Cart State: ", state.cart);
       return { ...state, cart: [] };
       // return [{ ...state, cart: [] }, "SUBMIT"];
     }
@@ -126,42 +113,16 @@ const reducer = (
 };
 
 const useCartContext = (initCartState: CartStateType) => {
-  // The useReducer hook takes in two arguments:
-  // 1. reducer function
-  // 2. initial state
-  // It returns an array with
-  //  1. Current state
-  //  2. Dispatch function
-  // The dispatch function is used to send actions to the reducer. When you call dispatch(action), React will call the reducer function we created with the current state, and the action we provide to the function call, then it will replace the state with the return value.
   const [state, dispatch] = useReducer(reducer, initCartState);
-  // Added state for cartId
   const [cartId, setCartId] = useState<string | null>(null);
-
-  //TODO: To update the cart on backend database, we can use React's useEffect(). This will auto sync cart w/ db whenever it changes.
 
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
 
-  // Updated useEffect to handle the updateCart response correctly
-  // Updated useEffect to work with your existing updateCart function
-  // useEffect(() => {
-  //   const syncCartWithBackend = async () => {
-  //     try {
-  //       const itemsToAdd = state.cart.map((item) => item.sku);
-  //       const res = await updateCart(itemsToAdd, []); // Passing an array of SKUs to add, and an empty array for removals
-  //       console.log("syncing cart with backend.... updateCart res: ", res);
-  //     } catch (error) {
-  //       console.error("Failed to sync cart with backend:", error);
-  //     }
-  //   };
-
-  //   syncCartWithBackend();
-  // }, [state.cart]);
   useEffect(() => {
     const syncCartWithBackend = async () => {
       try {
-        // Assuming your updateCart function can handle the entire cart state
         await updateCart(state.cart);
       } catch (error) {
         console.error("Failed to sync cart with backend:", error);
@@ -170,7 +131,7 @@ const useCartContext = (initCartState: CartStateType) => {
 
     syncCartWithBackend();
   }, [state.cart]);
-  // New function to handle quantity updates
+
   const updateItemQuantity = useCallback(
     async (sku: string, quantity: number) => {
       try {
@@ -187,7 +148,6 @@ const useCartContext = (initCartState: CartStateType) => {
   );
   //
 
-  // Defining total items to display.
   const totalItems: number = state.cart.reduce((previousValue, cartItem) => {
     return previousValue + cartItem.qty;
   }, 0);
@@ -229,13 +189,14 @@ const initCartContextState: UseCartContextType = {
   totalItems: 0,
   totalPrice: "",
   cart: [],
+  cartId: null,
+  setCartId: () => {},
   updateItemQuantity: async () => {},
 };
 
 export const CartContext =
   createContext<UseCartContextType>(initCartContextState);
 
-// Same as other file.
 type ChildrenType = { children?: ReactElement | ReactElement[] };
 
 export const CartProvider = ({ children }: ChildrenType): ReactElement => {

@@ -17,7 +17,6 @@ const SignUp: React.FC = () => {
       console.log("Signed up successfully", response);
       localStorage.setItem("token", response.token);
       console.log("token: ", response);
-      // Redirect to home page or dashboard
       navigate("/home");
     } catch (err) {
       setError("Failed to sign up");

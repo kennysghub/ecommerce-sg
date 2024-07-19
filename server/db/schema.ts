@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+// import { decimal } from "drizzle-orm/sqlite-core";
 
 // Utility functions that create common column definitions.
 const id = () =>
@@ -24,6 +25,7 @@ export const products = sqliteTable("products", {
   sku: text("sku").unique().notNull(),
   name: text("name").notNull(),
   price: integer("price").notNull(),
+  // price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   description: text("description"),
   imageURL: text("image_url"),
   createdAt: createdAt(),

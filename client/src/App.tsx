@@ -4,8 +4,10 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Checkout from "./pages/Checkout";
+import Cart from "./components/Cart";
+import NotFound from "./pages/NotFound";
 
-function App() {
+const App = () => {
   const content = (
     <>
       <Navbar />
@@ -13,14 +15,16 @@ function App() {
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/signin" element={<SignIn />} />
+
           <Route path="/signup" element={<SignUp />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </>
     </>
   );
   return content;
-}
+};
 
 export default App;

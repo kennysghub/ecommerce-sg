@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { signIn, AuthResponse } from "../api/AuthService";
-// import "./Auth.css";
 import { useNavigate } from "react-router-dom";
 
 const SignIn: React.FC = () => {
@@ -16,7 +15,6 @@ const SignIn: React.FC = () => {
       const response: AuthResponse = await signIn(email, password);
       console.log("Signed in successfully", response);
       localStorage.setItem("token", response.token);
-      // Redirect to home page or dashboard
       navigate("/home");
     } catch (err) {
       setError("Failed to sign in");

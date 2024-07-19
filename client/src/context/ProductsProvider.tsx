@@ -4,7 +4,9 @@ import {
   useState,
   useEffect,
   useCallback,
-} from "react";
+} from 'react';
+
+import { useAuth } from './AuthContext';
 
 export type ProductType = {
   id: string;
@@ -18,9 +20,9 @@ export type ProductType = {
 const initState: ProductType[] = [];
 
 // Defines the shape of the context value.
-export type UseProductsContextType = { products: ProductType[] };
+export type UseProductsContextType = { products: ProductType[]; fetchProducts: () => Promise<void> };
 
-const initContextState: UseProductsContextType = { products: [] };
+const initContextState: UseProductsContextType = { products: [], fetchProducts: async () => {}};
 
 // ProductsContext- creates a context of products, intialized with an emtpy array.
 const ProductsContext = createContext<UseProductsContextType>(initContextState);
@@ -29,16 +31,17 @@ type ChildrenType = { children?: ReactElement | ReactElement[] };
 
 export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
   const [products, setProducts] = useState<ProductType[]>(initState);
+  const { isAuthenticated } = useAuth();
 
   const fetchProducts = useCallback(async (): Promise<void> => {
-    console.log("Fetching products...");
-    const token = localStorage.getItem("token");
+    console.log('Fetching products...');
+    const token = localStorage.getItem('token');
     if (!token) {
-      console.log("No token found, user might not be authenticated.");
+      console.log('No token found, user might not be authenticated.');
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/v1/products", {
+      const response = await fetch('http://localhost:3000/v1/products', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -47,32 +50,24 @@ export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
         throw new Error(`Error! Status: ${response.status}`);
       }
       const data: ProductType[] = await response.json();
-      console.log("data: ", data);
+      console.log('data: ', data);
       setProducts(data);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
       }
     }
-    // const data = await fetch("http://localhost:3000/v1/products", {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .catch((err) => {
-    //     if (err instanceof Error) console.log(err.message);
-    //   });
-    // console.log("data: ", data);
-    // setProducts(data);
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    if(isAuthenticated) {
+      fetchProducts();
+    }
+    
+  }, [isAuthenticated, fetchProducts]);
 
   return (
-    <ProductsContext.Provider value={{ products }}>
+    <ProductsContext.Provider value={{ products, fetchProducts }}>
       {children}
     </ProductsContext.Provider>
   );

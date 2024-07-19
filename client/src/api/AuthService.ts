@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/v1";
+const API_URL = 'http://localhost:3000/v1';
 
 export interface User {
   id: string;
@@ -14,16 +14,16 @@ export interface AuthResponse {
 export const signUp = async (
   name: string,
   email: string,
-  password: string
+  password: string,
 ): Promise<AuthResponse> => {
   const response = await fetch(`${API_URL}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, password }),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to sign up");
+    throw new Error('Failed to sign up');
   }
 
   return response.json();
@@ -31,22 +31,22 @@ export const signUp = async (
 
 export const signIn = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<AuthResponse> => {
   const response = await fetch(`${API_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to sign in");
+    throw new Error('Failed to sign in');
   }
 
   return response.json();
 };
 
 export const signOut = (): void => {
-  console.log("Removing token from local storage and signing user out...");
-  localStorage.removeItem("token");
+  console.log('Removing token from local storage and signing user out...');
+  localStorage.removeItem('token');
 };

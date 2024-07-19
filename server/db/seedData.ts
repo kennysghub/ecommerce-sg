@@ -166,7 +166,7 @@ async function seedDatabase() {
 
         const totalAmount = cartItems.reduce(
           (sum, item) => sum + item.productPrice,
-          0
+          0,
         );
 
         await db.insert(orders).values({

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { signUp, AuthResponse } from "../api/AuthService";
 import { useNavigate } from "react-router-dom";
-
+import { signUp, AuthResponse } from "../api/AuthService";
+import { useAuth } from "../context/AuthContext";
 const SignUp: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { setIsAuthenticated } = useAuth();
 
   const navigate = useNavigate();
 
@@ -17,6 +18,7 @@ const SignUp: React.FC = () => {
       console.log("Signed up successfully", response);
       localStorage.setItem("token", response.token);
       console.log("token: ", response);
+      setIsAuthenticated(true);
       navigate("/home");
     } catch (err) {
       setError("Failed to sign up");

@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { submitOrder, IOrderResponse } from "../api/OrderService";
 import useCart from "../hooks/useCart";
 import CartLineItem from "../components/CartLineItem";
-import { submitOrder, IOrderResponse } from "../api/OrderService";
 import Receipt from "../components/Receipt";
 
 const Checkout = () => {

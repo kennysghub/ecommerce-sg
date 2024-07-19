@@ -32,7 +32,6 @@ export const products = sqliteTable("products", {
 });
 
 // users table
-// TODO: users id column conflict with firebase uid?
 export const users = sqliteTable("users", {
   id: id(),
   name: text("name").notNull(),
@@ -114,17 +113,6 @@ export const ordersRelations = relations(orders, ({ one }) => ({
     references: [carts.id],
   }),
 }));
-
-// export const productRelations = relations(products, ({ many }) => ({
-//   // Add relations here
-// }))
-
-// export const carts = sqliteTable("carts", {
-//   id: id(),
-//   productData: text("product_data").notNull(), // JSON string of product SKUs and quantities
-//   totalPrice: integer("total_price").notNull(),
-//   createdAt: createdAt(),
-// });
 
 // Type inferences
 export type InsertProduct = typeof products.$inferInsert;

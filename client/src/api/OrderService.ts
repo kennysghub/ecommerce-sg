@@ -1,11 +1,11 @@
 const API_URL = "http://localhost:3000/v1";
 
-export interface OrderResponse {
+export interface IOrderResponse {
   transactionId: string;
   amount: number;
 }
 
-export const submitOrder = async (): Promise<OrderResponse> => {
+export const submitOrder = async (): Promise<IOrderResponse> => {
   const token = localStorage.getItem("token");
   if (!token) {
     throw new Error("No authentication token found");

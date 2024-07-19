@@ -57,12 +57,17 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'));"
 ```bash
 npm run generate
 npm run db:push
+```
+To populate the database with some sample data, as well as a list of products run:
+```bash
 npm run seed
 ```
 You can explore the data tables by running:
 ```bash
 npm run studio
 ```
+
+
 
 6. In the root directory, start the server:
 ```bash
@@ -105,6 +110,35 @@ This a e-commerce application that allows users to perform the following actions
 - Removing Items from Cart
   - Flow: User Interaction → dispatch(REMOVE) → Reducer → State Update → Backend Sync
   - The REMOVE action filters out the item from the cart array.
+
+4. **Data Storage**
+
+Schema Design:
+
+- The database schema is defined in schema.ts using Drizzle ORM. It consists of five main tables:
+  - products: Stores product information.
+  - users: Stores user account information.
+  - carts: Represents shopping carts for users.
+  - cart_product: A junction table for the many-to-many relationship between carts and products.
+  - orders: Stores order information, linking users and carts
+
+- Relationships:
+
+The schema defines relationships between tables using Drizzle ORM's relations function:
+  - Products have many CartProducts
+  - Users have many Carts and Orders
+  - Carts belong to a User and have many CartProducts
+  - CartProducts belong to a Cart and a Product
+  - Orders belong to a User and a Cart
+
+- Data Seeding:
+- The database is seeded with initial data using the seedDatabase function in ./server/db/seedData.ts. This function performs the following operations:
+
+  - Inserts sample products into the products table.
+  - Creates user accounts with hashed passwords.
+  - Generates shopping carts for each user with random products.
+  - Creates sample orders for each user based on their cart contents.
+
 
 ## Approach to Problem Solving
 

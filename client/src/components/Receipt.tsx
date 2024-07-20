@@ -13,7 +13,7 @@ const Receipt: React.FC<ReceiptProps> = ({ transactionId, amount }) => {
         <strong>Transaction ID:</strong> {transactionId}
       </p>
       <p>
-        <strong>Total Amount:</strong> ${amount.toFixed(2)}
+        <strong>Total Amount:</strong> ${amount}
       </p>
     </div>
   );

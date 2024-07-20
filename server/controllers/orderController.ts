@@ -1,16 +1,17 @@
-import { Request, Response } from "express";
-import { db } from "../db/db";
-import { carts, cartProduct, orders, products } from "../db/schema";
-import { eq, and } from "drizzle-orm/expressions";
-import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
+import { Request, Response } from 'express';
+import { db } from '../db/db';
+import { carts, cartProduct, orders, products } from '../db/schema';
+import { eq, and } from 'drizzle-orm/expressions';
+import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 interface AuthenticatedRequest extends Request {
   user?: jwt.JwtPayload & { userId: string };
 }
+
 export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
   if (!req.user) {
-    return res.status(401).json({ error: "User not authenticated" });
+    return res.status(401).json({ error: 'User not authenticated' });
   }
   const userId = req.user.userId as string;
 
@@ -19,7 +20,7 @@ export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
 
   const cartId = cart.id;
   if (!cartId) {
-    return res.status(400).json({ error: "cartId is required" });
+    return res.status(400).json({ error: 'cartId is required' });
   }
 
   try {
@@ -32,7 +33,7 @@ export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
       .where(and(eq(carts.id, cartId), eq(carts.userId, userId)));
 
     if (!userCart) {
-      return res.status(404).json({ error: "Cart not found for this user" });
+      return res.status(404).json({ error: 'Cart not found for this user' });
     }
 
     // Get everything in the cart
@@ -41,22 +42,29 @@ export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
         cartProductId: cartProduct.id,
         productId: products.id,
         productPrice: products.price,
+        quantity: cartProduct.quantity,
       })
       .from(cartProduct)
       .where(eq(cartProduct.cartId, cartId))
       .leftJoin(products, eq(cartProduct.productId, products.id));
 
     console.log(`Found ${cartItems.length} items in the cart`);
+    console.log('Cart items:', cartItems);
 
     // Calculate total amount, filtering out any null products
     const totalAmount = cartItems.reduce((sum, item) => {
-      if (item.productId && item.productPrice) {
-        return sum + item.productPrice;
+      if (item.productId && item.productPrice && item.quantity) {
+        return sum + item.productPrice * item.quantity;
       }
       return sum;
     }, 0);
 
     console.log(`Total order amount: ${totalAmount}`);
+    cartItems.forEach((item) => {
+      console.log(
+        `Product ID: ${item.productId}, Price: ${item.productPrice}, Quantity: ${item.quantity}`,
+      );
+    });
 
     // Submit the order
     const [newOrder] = await db
@@ -75,16 +83,16 @@ export const submitOrder = async (req: AuthenticatedRequest, res: Response) => {
     // Clear the cart after submitting the order
     await db.delete(cartProduct).where(eq(cartProduct.cartId, cartId));
     console.log(`Cleared cart ${cartId}`);
-    console.log("New Order TransactionID: ", newOrder.transactionId);
-    console.log("New Order Amount: ", newOrder.amount);
+    console.log('New Order TransactionID: ', newOrder.transactionId);
+    console.log('New Order Amount: ', newOrder.amount);
 
     return res.json(newOrder);
   } catch (error) {
-    console.error("Error submitting order:", error);
+    console.error('Error submitting order:', error);
     if (error instanceof Error) {
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
     }
-    res.status(500).json({ error: "Failed to submit order" });
+    res.status(500).json({ error: 'Failed to submit order' });
   }
 };

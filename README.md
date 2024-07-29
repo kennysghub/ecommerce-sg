@@ -170,13 +170,13 @@ There were some challenges faced with  cart management. The first implementation
 
 ## Testing Strategy
 - React Testing Library: Chosen for its focus on testing components in a way that resembles user interactions.
-- Jest: Used as the test runner and for its mocking capabilities.
+- Vitest: Chosen for compatibility and convenience. Vitest also has a very similar API compared to Jest. 
 
 For testing, I focused on unit tests for key components of the frontend application including:
 - Product.test.tsx
-- Cart.test.tsx
 - ProductList.test.tsx
 - Checkout.test.tsx
+- Receipt.test.tsx
 
 Areas for Future Testing:
 - End-to-End Tests: To validate user flows and interactions.

@@ -34,7 +34,6 @@ export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
   const { isAuthenticated } = useAuth();
 
   const fetchProducts = useCallback(async (): Promise<void> => {
-    console.log('Fetching products...');
     const token = localStorage.getItem('token');
     if (!token) {
       console.log('No token found, user might not be authenticated.');
@@ -50,7 +49,6 @@ export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
         throw new Error(`Error! Status: ${response.status}`);
       }
       const data: ProductType[] = await response.json();
-      console.log('data: ', data);
       setProducts(data);
     } catch (error) {
       if (error instanceof Error) {

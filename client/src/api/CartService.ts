@@ -1,11 +1,8 @@
 import { CartItemType } from '../context/CartProvider';
 const API_URL = 'http://localhost:3000/v1';
 
-// interface CartResponse {
-//   cartId: string;
-//   items?: CartItemType[];
-// }
-
+//*PUT
+// Calling replaceCart on backend
 export const updateCart = async (cart: CartItemType[]): Promise<void> => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -24,6 +21,7 @@ export const updateCart = async (cart: CartItemType[]): Promise<void> => {
   if (!response.ok) {
     throw new Error('Failed to update cart');
   }
+  return response.json();
 };
 
 export const updateCartItemQuantity = async (
@@ -46,6 +44,25 @@ export const updateCartItemQuantity = async (
 
   if (!response.ok) {
     throw new Error('Failed to update cart item quantity');
+  }
+
+  return response.json();
+};
+
+export const getCart = async (): Promise<CartItemType[]> => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+
+  const response = await fetch(`${API_URL}/cart`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch cart');
   }
 
   return response.json();

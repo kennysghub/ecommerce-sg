@@ -1,5 +1,6 @@
 const API_URL = 'http://localhost:3000/v1';
-
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 export interface User {
   id: string;
   name: string;
@@ -47,6 +48,15 @@ export const signIn = async (
 };
 
 export const signOut = (): void => {
+  const { setIsAuthenticated } = useAuth();
   console.log('Removing token from local storage and signing user out...');
   localStorage.removeItem('token');
+  setIsAuthenticated(false);
+};
+
+export const RequireAuth = ({ children }: any) => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  return isAuthenticated === true ? children : navigate('/signin');
 };

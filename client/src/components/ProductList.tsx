@@ -1,20 +1,13 @@
-import useCart from "../hooks/useCart";
-import useProducts from "../hooks/useProducts";
-import { ReactElement, useEffect } from "react";
-import Product from "./Product";
-import { useAuth } from "../context/AuthContext"; 
+import { ReactElement, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import useProducts from '../hooks/useProducts';
+import useCart from '../hooks/useCart';
+import MemoizedProduct from './Product';
 
 const ProductList = () => {
   const { dispatch, REDUCER_ACTIONS, cart } = useCart();
   const { products, fetchProducts } = useProducts();
-  const { isAuthenticated } = useAuth(); 
-
-  useEffect(() => {
-    console.log('ProductList effect. isAuthenticated:', isAuthenticated);
-    if (isAuthenticated) {
-      fetchProducts();
-    }
-  }, [isAuthenticated, fetchProducts]);
+  const { isAuthenticated } = useAuth();
 
   let pageContent: ReactElement | ReactElement[] = <p>Loading...</p>;
 
@@ -23,7 +16,7 @@ const ProductList = () => {
       const inCart: boolean = cart.some((item) => item.sku === product.sku);
 
       return (
-        <Product
+        <MemoizedProduct
           key={product.sku}
           product={product}
           dispatch={dispatch}

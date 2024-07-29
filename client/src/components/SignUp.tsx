@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signUp, AuthResponse } from "../api/AuthService";
-import { useAuth } from "../context/AuthContext";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signUp, AuthResponse } from '../api/AuthService';
+import { useAuth } from '../context/AuthContext';
 const SignUp: React.FC = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { setIsAuthenticated } = useAuth();
 
   const navigate = useNavigate();
@@ -15,13 +15,12 @@ const SignUp: React.FC = () => {
     e.preventDefault();
     try {
       const response: AuthResponse = await signUp(name, email, password);
-      console.log("Signed up successfully", response);
-      localStorage.setItem("token", response.token);
-      console.log("token: ", response);
+      console.log('Signed up successfully', response);
+      localStorage.setItem('token', response.token);
       setIsAuthenticated(true);
-      navigate("/home");
+      navigate('/home');
     } catch (err) {
-      setError("Failed to sign up");
+      setError('Failed to sign up');
     }
   };
 

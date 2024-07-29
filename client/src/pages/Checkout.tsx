@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { submitOrder, IOrderResponse } from "../api/OrderService";
-import useCart from "../hooks/useCart";
-import CartLineItem from "../components/CartLineItem";
-import Receipt from "../components/Receipt";
+import { useState } from 'react';
+import { submitOrder, IOrderResponse } from '../api/OrderService';
+import useCart from '../hooks/useCart';
+import CartLineItem from '../components/CartLineItem';
+import Receipt from '../components/Receipt';
 
 const Checkout = () => {
   const { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart } = useCart();
   const [orderAmount, setOrderAmount] = useState<number>(0);
-  const [transactionId, setTransactionId] = useState<string>("");
+  const [transactionId, setTransactionId] = useState<string>('');
 
   const [confirm, setConfirm] = useState<boolean>(false);
 
   const onSubmitOrder = async () => {
     const res: IOrderResponse = await submitOrder();
     dispatch({ type: REDUCER_ACTIONS.SUBMIT });
-    console.log("Res: ", res);
-    console.log("TransactionID: ", res.transactionId);
-    console.log("Total Amount: ", res.amount);
+    console.log(
+      `TransactionId: ${res.transactionId}, Total Amount: ${res.amount}`,
+    );
     setTransactionId(res.transactionId);
     setOrderAmount(res.amount);
     setConfirm(true);

@@ -1,71 +1,71 @@
-import { randomUUID } from "crypto";
-import { relations, sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { randomUUID } from 'crypto';
+import { relations, sql } from 'drizzle-orm';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 // import { decimal } from "drizzle-orm/sqlite-core";
 
 // Utility functions that create common column definitions.
 const id = () =>
-  text("id")
+  text('id')
     .primaryKey()
     .$default(() => randomUUID());
 
 const createdAt = () =>
-  text("created_at")
+  text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull();
 
 const updatedAt = () =>
-  text("updated_at")
+  text('updated_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull();
 
 // products table
-export const products = sqliteTable("products", {
+export const products = sqliteTable('products', {
   id: id(),
-  sku: text("sku").unique().notNull(),
-  name: text("name").notNull(),
-  price: integer("price").notNull(),
+  sku: text('sku').unique().notNull(),
+  name: text('name').notNull(),
+  price: integer('price').notNull(),
   // price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  description: text("description"),
-  imageURL: text("image_url"),
+  description: text('description'),
+  imageURL: text('image_url'),
   createdAt: createdAt(),
 });
 
 // users table
-export const users = sqliteTable("users", {
+export const users = sqliteTable('users', {
   id: id(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  password: text('password').notNull(),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
 
 // carts table
-export const carts = sqliteTable("carts", {
+export const carts = sqliteTable('carts', {
   id: id(),
-  userId: text("user_id").references(() => users.id),
+  userId: text('user_id').references(() => users.id),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
-  total: integer("total").notNull().default(0),
+  total: integer('total').notNull().default(0),
 });
 
-//  cartProduct table- a junction table that sets a many-to-many relationship between carts and products.
-export const cartProduct = sqliteTable("cart_product", {
+// cartProduct table- a junction table that sets a many-to-many relationship between carts and products.
+export const cartProduct = sqliteTable('cart_product', {
   id: id(),
-  cartId: text("cart_id").references(() => carts.id),
-  productId: text("product_id").references(() => products.id),
-  quantity: integer("quantity").notNull().default(1),
-  price: integer("price").notNull().default(0),
+  cartId: text('cart_id').references(() => carts.id),
+  productId: text('product_id').references(() => products.id),
+  quantity: integer('quantity').notNull().default(1),
+  price: integer('price').notNull().default(0),
 });
 
 // orders table- stores order information, linking users and carts.
-export const orders = sqliteTable("orders", {
+export const orders = sqliteTable('orders', {
   id: id(),
-  userId: text("user_id").references(() => users.id),
-  cartId: text("cart_id").references(() => carts.id),
-  transactionId: text("transaction_id").notNull(),
-  amount: integer("amount").notNull(),
+  userId: text('user_id').references(() => users.id),
+  cartId: text('cart_id').references(() => carts.id),
+  transactionId: text('transaction_id').notNull(),
+  amount: integer('amount').notNull(),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });

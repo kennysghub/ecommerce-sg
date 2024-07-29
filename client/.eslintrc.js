@@ -6,6 +6,7 @@ export default {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
+    'plugin:vitest-globals/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.js'],
   parser: '@typescript-eslint/parser',

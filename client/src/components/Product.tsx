@@ -15,6 +15,7 @@ const Product = ({
   REDUCER_ACTIONS,
   inCart,
 }: PropsType): ReactElement => {
+  
   const onAddToCart = () => {
     dispatch({
       type: REDUCER_ACTIONS.ADD,

@@ -10,10 +10,10 @@ const Receipt: React.FC<ReceiptProps> = ({ transactionId, amount }) => {
     <div className="receipt">
       <h2>Order Receipt</h2>
       <p>
-        <strong>Transaction ID:</strong> {transactionId}
+        <strong>Transaction ID: {transactionId}</strong>
       </p>
       <p>
-        <strong>Total Amount:</strong> ${amount}
+        <strong>Total Amount: ${amount}</strong>
       </p>
     </div>
   );

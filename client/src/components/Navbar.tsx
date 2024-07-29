@@ -1,22 +1,34 @@
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from '../api/AuthService';
+import { useAuth } from '../context/AuthContext';
+
 const Navbar = () => {
+  const { setIsAuthenticated, isAuthenticated } = useAuth();
+
   const navigate = useNavigate();
   const handleSignOut = () => {
-    signOut();
-    navigate('/')
-  }
+    console.log('Removing token from local storage and signing user out...');
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    navigate('/');
+  };
+
   return (
     <div className="container navbar">
-      <Link to="/home">Home</Link>
-      <nav className="nav-links">
-        <Link to="/">Sign In</Link>
-        <Link to="/signup">Sign Up</Link>
-        {/* <Link to="/checkout">Checkout</Link> */}
-        <Link to="/cart">Cart</Link>
-      </nav>
-        <button className='sign-out-button'onClick={handleSignOut}>Sign Out</button>
+      {isAuthenticated ? (
+        <nav className="nav-links">
+          <Link to="/home">Home</Link>
+          <Link to="/cart">Cart</Link>
+          <button className="sign-out-button" onClick={handleSignOut}>
+            Sign Out
+          </button>
+        </nav>
+      ) : (
+        <nav className="nav-links">
+          <Link to="/signin">Sign In</Link>
+          <Link to="/signup">Sign Up</Link>
+        </nav>
+      )}
     </div>
   );
 };

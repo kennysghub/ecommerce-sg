@@ -6,6 +6,7 @@ import Cart from './components/Cart';
 import Home from './pages/Home';
 import Checkout from './pages/Checkout';
 import NotFound from './pages/NotFound';
+import { RequireAuth } from './api/AuthService';
 
 const App = () => {
   const content = (
@@ -13,12 +14,20 @@ const App = () => {
       <Navbar />
       <>
         <Routes>
-          <Route path="/" element={<SignIn />} />
-          <Route path="/home" element={<Home />} />
-
+          <Route path="/" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/home" element={
+            <RequireAuth>
+              <Home />
+            </RequireAuth>
+          }/>
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={
+            <RequireAuth>
+              <Cart />
+            </RequireAuth>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </>

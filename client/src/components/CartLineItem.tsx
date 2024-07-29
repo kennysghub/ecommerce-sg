@@ -1,8 +1,8 @@
-import { ChangeEvent, ReactElement, memo } from "react";
-import { updateCartItemQuantity } from "../api/CartService";
-import { CartItemType } from "../context/CartProvider";
-import { ReducerAction } from "../context/CartProvider";
-import { ReducerActionType } from "../context/CartProvider";
+import { ChangeEvent, ReactElement, memo } from 'react';
+import { updateCartItemQuantity } from '../api/CartService';
+import { CartItemType } from '../context/CartProvider';
+import { ReducerAction } from '../context/CartProvider';
+import { ReducerActionType } from '../context/CartProvider';
 
 type PropsType = {
   item: CartItemType;
@@ -34,7 +34,7 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
         payload: { ...item, qty: newQty },
       });
     } catch (error) {
-      console.error("Failed to update quantity:", error);
+      console.error('Failed to update quantity:', error);
     }
   };
 
@@ -49,9 +49,9 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
       <img src={item.imageURL} alt={item.name} />
       <div aria-label="Item Name">{item.name}</div>
       <div aria-label="Price Per Item">
-        {new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        {new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
         }).format(item.price)}
       </div>
       <label htmlFor="itemQty" className="offscreen">
@@ -68,9 +68,9 @@ const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
         {options}
       </select>
       <div className="cart__item-subtotal" aria-label="Line Item Subtotal">
-        {new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
+        {new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
         }).format(lineTotal)}
         <button
           className="cart__button"

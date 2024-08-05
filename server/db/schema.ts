@@ -70,6 +70,25 @@ export const orders = sqliteTable('orders', {
   updatedAt: updatedAt(),
 });
 
+export const orderItem = sqliteTable('order_item', {
+  id: id(),
+  orderId: text('order_id').references(() => orders.id),
+  productId: text('product_id').references(() => products.id),
+  quantity: integer('quantity'),
+  price: integer('price'),
+});
+
+export const orderItemRelations = relations(orderItem, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItem.orderId],
+    references: [orders.id],
+  }),
+  product: one(products, {
+    fields: [orderItem.productId],
+    references: [products.id],
+  }),
+}));
+
 // Relations
 export const productsRelations = relations(products, ({ many }) => ({
   cartProducts: many(cartProduct),

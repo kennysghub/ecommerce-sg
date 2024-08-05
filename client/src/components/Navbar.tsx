@@ -19,6 +19,7 @@ const Navbar = () => {
         <nav className="nav-links">
           <Link to="/home">Home</Link>
           <Link to="/cart">Cart</Link>
+          <Link to="/order-history">Order History</Link>
           <button className="sign-out-button" onClick={handleSignOut}>
             Sign Out
           </button>

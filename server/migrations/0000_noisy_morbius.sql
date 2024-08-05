@@ -17,6 +17,16 @@ CREATE TABLE `carts` (
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+CREATE TABLE `order_item` (
+	`id` text PRIMARY KEY NOT NULL,
+	`order_id` text,
+	`product_id` text,
+	`quantity` text,
+	`price` integer,
+	FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
 CREATE TABLE `orders` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text,

@@ -45,23 +45,29 @@ const reducer = (
   action: ReducerAction,
 ): CartStateType => {
   switch (action.type) {
+    /* ----------------------------------- ADD ---------------------------------- */
     case REDUCER_ACTION_TYPE.ADD: {
       if (!action.payload) {
         throw new Error('action.payload missing in ADD action');
       }
       const { sku, name, price, imageURL } = action.payload;
+      // Creates a new array, that contains all items in the current cart EXCEPT  the item with the same SKU as the one being added. This prepares for the possibility that the item already exists in  the cart.
       const filteredCart: CartItemType[] = state.cart.filter(
         (item) => item.sku !== sku,
       );
+      // Then we check if the item already exists in the cart by looking for an item that has the same SKU as the item being added. If we don't find it, itemExists will be undefined.
       const itemExists: CartItemType | undefined = state.cart.find(
         (item) => item.sku === sku,
       );
+      // If itemExists is a CartItemType object(truthy), then we increment its quantity by 1. If itemExists is undefined(falsy), then the item wasn't in the cart previously, so we set the quantity to 1.
       const qty: number = itemExists ? itemExists.qty + 1 : 1;
+      // We are returning the new cart array that includes all the items from filteredCart(which is the original cart minus the item being added if it existed) plus the new or updated item.
       return {
         ...state,
         cart: [...filteredCart, { sku, name, price, qty, imageURL }],
       };
     }
+    /* --------------------------------- REMOVE --------------------------------- */
     case REDUCER_ACTION_TYPE.REMOVE: {
       if (!action.payload) {
         throw new Error('action.payload missing in REMOVE action');
@@ -72,6 +78,7 @@ const reducer = (
       );
       return { ...state, cart: [...filteredCart] };
     }
+    /* -------------------------------- QUANTITY -------------------------------- */
     case REDUCER_ACTION_TYPE.QUANTITY: {
       if (!action.payload) {
         throw new Error('action.payload missing in QUANTITY action');
@@ -83,15 +90,21 @@ const reducer = (
       if (!itemExists) {
         throw new Error('Item must exist in order to update quantity');
       }
+      // This creates a new object updatedItem by spreading the properties of the existing item and overwriting the qty with the new qty.
+
       const updatedItem: CartItemType = { ...itemExists, qty };
       const filteredCart: CartItemType[] = state.cart.filter(
         (item) => item.sku !== sku,
       );
+      // This sets the cart property to a new array that includes all items from filteredCart plus the updatedItem.
+
       return { ...state, cart: [...filteredCart, updatedItem] };
     }
+    /* --------------------------------- SUBMIT --------------------------------- */
     case REDUCER_ACTION_TYPE.SUBMIT: {
       return { ...state, cart: [] };
     }
+    /* -------------------------------- SET_CART -------------------------------- */
     case REDUCER_ACTION_TYPE.SET_CART: {
       if (!action.payload) {
         throw new Error('action.payload missing in SET_CART action');
@@ -102,6 +115,7 @@ const reducer = (
       throw new Error('Unidentified reducer action type');
   }
 };
+// Custom hook that encapsulates all the logic for managing the cart state in the application.
 
 const useCartContext = (initCartState: CartStateType) => {
   const [state, dispatch] = useReducer(reducer, initCartState);
@@ -111,6 +125,7 @@ const useCartContext = (initCartState: CartStateType) => {
   const REDUCER_ACTIONS = useMemo(() => {
     return REDUCER_ACTION_TYPE;
   }, []);
+  // This is the initial cart fetching. it runs once when the component mounts to fetch the initial cart data from the server.
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -143,7 +158,11 @@ const useCartContext = (initCartState: CartStateType) => {
 
     syncCartWithBackend();
   }, [state.cart, isLoading]);
-
+  // useCallback returns a memoized function of the callback function that only changes if one of the dependencies has changed.
+  // The function updateCartItemQuantity  is wrapped in useCallback, React will return the same function instance between re-renders as long as the dependencies haven't changed.
+  //? Why memoize this function?
+  // If this function is passed as a prop to child components, memoizing it can prevent those components from re-rendering unnecessarily.
+  // It ensures that the same function instance is used across renders, which can be important for hooks that depend on stable function references (like useEffect)
   const updateItemQuantity = useCallback(
     async (sku: string, quantity: number) => {
       try {
@@ -177,6 +196,7 @@ const useCartContext = (initCartState: CartStateType) => {
     const itemB = Number(b.sku.slice(-4));
     return itemA - itemB;
   });
+  // Returns an object with all the necessary state values and functions to manage the cart.
 
   return {
     dispatch,
@@ -204,6 +224,7 @@ const initCartContextState: UseCartContextType = {
   updateItemQuantity: async () => {},
   isLoading: true,
 };
+// CartContext will provide the cart state and functions to child components.
 
 export const CartContext =
   createContext<UseCartContextType>(initCartContextState);
